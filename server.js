@@ -1,5 +1,8 @@
 const express = require("express");
-const { Connection } = require("./connections/connection");
+const path = require('path');
+require('dotenv').config({ path: require('find-config')('.env') })
+const mongoose = require("mongoose");
+const PORT = process.env.PORT || 5000;
 const EmrSrouter = require("./routes/EmrServiceRoute");
 const FwpSrouter = require("./routes/FindWpServiceRoute");
 const ProdSrouter = require("./routes/ProductServiceRoute");
@@ -11,10 +14,20 @@ app.use("/api-v1", EmrSrouter);
 app.use("/api-v1", FwpSrouter);
 app.use("/api-v1", ProdSrouter);
 app.get("/", (req, res) => {
-  res.send(
-    "<html><h2>[*] Server Running</h2><a href='http://localhost:5000/api-v1/emergency-services'>Emergency Services</a><a href='http://localhost:5000/api-v1/fwp-services'>Emergency Services</a></html>"
-  );
+  res.sendFile(path.join(__dirname+'/view/index.html'));
 });
 
-Connection();
+mongoose
+    .connect(
+      `mongodb+srv://${process.env.EXP_MDB_USER}:${process.env.EXP_MDB_PASS}@cluster0.udqkyom.mongodb.net/?retryWrites=true&w=majority`
+    )
+    .then(() =>
+      app.listen(PORT, () => {
+        console.log("[*] DB Connected => Server Running on Port : ", PORT);
+      })
+    )
+    .catch((error) => {
+      console.log("[*] DB Connection Error \n\n", error);
+    });
+
 
