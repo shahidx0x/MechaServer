@@ -27,9 +27,26 @@ const addEmrServices = async (req, res, next) => {
     !exp_area &&
     exp_area.trim == ""
   ) {
-    res.status(422).json({ message: "Invalid Data" });
+    res.status(422).json({ message: "invalid data" });
   }
-  
+  let em_service;
+  try {
+    em_service = new EmergencyService({
+      tech_name,
+      srv_area,
+      cont_no,
+      image,
+      exp_area,
+    });
+    em_service = await em_service.save();
+  } catch (error) {
+    return next(error);
+  }
+  if(!em_service){
+    return res.status(500).json({message : "unable to save the data"});
+  }
+  return res.status(201).json({message : "data saved sucessfully"})
 };
 
 exports.getAllEmrService = getAllEmrService;
+exports.addEmrServices = addEmrServices;

@@ -1,7 +1,9 @@
 const express = require("express");
-const { getAllFwpService } = require("../controller/FindWpServiceController");
-const FwpSrouter = express.Router();
+const { getAllFwpService, addFwpServices } = require("../controller/FindWpServiceController");
+const fwp_router = express.Router();
 
-FwpSrouter.get("/fwp-services", getAllFwpService);
+fwp_router.get("/fwp-services", getAllFwpService);
+fwp_router.post("/fwp-services",addFwpServices);
 
-module.exports = FwpSrouter;
+
+module.exports = fwp_router;

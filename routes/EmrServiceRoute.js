@@ -1,7 +1,8 @@
 const express = require("express");
-const { getAllEmrService } = require("../controller/EmrServiceController");
-const EmrSrouter = express.Router();
+const { getAllEmrService, addEmrServices } = require("../controller/EmrServiceController");
+const emrs_router = express.Router();
 
-EmrSrouter.get("/emergency-services", getAllEmrService);
+emrs_router.get("/emr-services", getAllEmrService);
+emrs_router.post("/emr-services",addEmrServices);
 
-module.exports = EmrSrouter;
+module.exports = emrs_router;
