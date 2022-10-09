@@ -24,7 +24,7 @@ app.use("/api-v1", fwp_router);
 app.use("/api-v1", product_router);
 
 //view
-app.get("/", (res) => {
+app.get("/", (req,res) => {
   res.sendFile(path.join(__dirname+'/view/index.html'));
 });
 
