@@ -1,6 +1,6 @@
 const ProductService = require("../model/ProductService");
 
-const getAllProductService = async (req, res, next) => {
+exports.getAllProductService = async (req, res, next) => {
   let allProductServices;
   try {
     allProductServices = await ProductService.find();
@@ -13,7 +13,7 @@ const getAllProductService = async (req, res, next) => {
   return res.status(200).json({ allProductServices });
 };
 
-const addProduct = async (req, res, next) => {
+exports.addProduct = async (req, res, next) => {
   const { prod_name, prod_cat, price, image } = req.body;
   if (
     !prod_name &&
@@ -32,18 +32,49 @@ const addProduct = async (req, res, next) => {
       prod_name,
       prod_cat,
       price,
-      image
+      image,
     });
     products = await products.save();
   } catch (error) {
     return next(error);
   }
-  if(!products){
-    return res.status(500).json({message : "unable to save the data"});
+  if (!products) {
+    return res.status(500).json({ message: "unable to save the data" });
   }
-  return res.status(201).json({message : "data saved sucessfully"})
+  return res.status(201).json({ message: "data saved sucessfully" });
+};
+exports.deleteOne = async (req, res, next) => {
+  let data;
+  try {
+    data = await ProductService.findById(req.params.id);
+    await data.remove();
+    res.send({ data: "deleted" });
+  } catch (error) {
+    return next(error);
+  }
 };
 
+exports.updateOne = async (req, res, next) => {
+  let data;
+  try {
+    data = await ProductService.findById(req.params.id);
+    Object.assign(data, req.body);
+    data.save();
+    res.send({ res: "patched" });
+  } catch (error) {
+    return next(error);
+  }
+};
+exports.findOneWp = async (req, res, next) => {
+  let data;
+  try {
+    data = await ProductService.findById(req.params.id);
+  } catch (error) {
+    return next(error);
+  }
+  if (!data) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+  return res.status(200).json({ data });
+};
 
-exports.getAllProductService = getAllProductService;
-exports.addProduct = addProduct;

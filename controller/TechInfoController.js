@@ -1,6 +1,6 @@
 const TechInfomation = require("../model/TechInfomation");
 
-const addTechInfo = async (req, res, next) => {
+exports.addTechInfo = async (req, res, next) => {
   const {
     full_name,
     cont_no,
@@ -31,7 +31,7 @@ const addTechInfo = async (req, res, next) => {
   }
 };
 
-const allTechInfo = async (req, res, next) => {
+exports.allTechInfo = async (req, res, next) => {
   let allTechInfo;
   try {
     allTechInfo = await TechInfomation.find();
@@ -44,5 +44,38 @@ const allTechInfo = async (req, res, next) => {
   return res.status(200).json({ allTechInfo });
 };
 
-exports.allTechInfo = allTechInfo;
-exports.addTechInfo = addTechInfo;
+exports.deleteOne = async (req, res, next) => {
+  let data;
+  try {
+    data = await TechInfomation.findById(req.params.id);
+    await data.remove();
+    res.send({ data: "deleted" });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+exports.updateOne = async (req, res, next) => {
+  let data;
+  try {
+    data = await TechInfomation.findById(req.params.id);
+    Object.assign(data, req.body);
+    data.save();
+    res.send({ res: "patched" });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+exports.findOneTech = async (req, res, next) => {
+  let data;
+  try {
+    data = await TechInfomation.findById(req.params.id);
+  } catch (error) {
+    return next(error);
+  }
+  if (!data) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+  return res.status(200).json({ data });
+};

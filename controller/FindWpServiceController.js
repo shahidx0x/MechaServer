@@ -1,6 +1,6 @@
 const FindWpService = require("../model/FindWpService");
 
-const getAllFwpService = async (req, res, next) => {
+exports.getAllFwpService = async (req, res, next) => {
   let allFwpServices;
   try {
     allFwpServices = await FindWpService.find();
@@ -12,7 +12,7 @@ const getAllFwpService = async (req, res, next) => {
   }
   return res.status(200).json({ allFwpServices });
 };
-const addFwpServices = async (req, res, next) => {
+exports.addFwpServices = async (req, res, next) => {
   const { wp_name, srv_area, cont_no, image } = req.body;
   if (
     !wp_name &&
@@ -32,17 +32,48 @@ const addFwpServices = async (req, res, next) => {
       wp_name,
       srv_area,
       cont_no,
-      image
+      image,
     });
     wp_service = await wp_service.save();
   } catch (error) {
     return next(error);
   }
-  if(!wp_service){
-    return res.status(500).json({message : "unable to save the data"});
+  if (!wp_service) {
+    return res.status(500).json({ message: "unable to save the data" });
   }
-  return res.status(201).json({message : "data saved sucessfully"})
+  return res.status(201).json({ message: "data saved sucessfully" });
+};
+exports.deleteOne = async (req, res, next) => {
+  let data;
+  try {
+    data = await FindWpService.findById(req.params.id);
+    await data.remove();
+    res.send({ data: "deleted" });
+  } catch (error) {
+    return next(error);
+  }
 };
 
-exports.getAllFwpService = getAllFwpService;
-exports.addFwpServices = addFwpServices;
+exports.updateOne = async (req, res, next) => {
+  let data;
+  try {
+    data = await FindWpService.findById(req.params.id);
+    Object.assign(data, req.body);
+    data.save();
+    res.send({ res: "patched" });
+  } catch (error) {
+    return next(error);
+  }
+};
+exports.findOneWp = async (req, res, next) => {
+  let data;
+  try {
+    data = await FindWpService.findById(req.params.id);
+  } catch (error) {
+    return next(error);
+  }
+  if (!data) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+  return res.status(200).json({ data });
+};

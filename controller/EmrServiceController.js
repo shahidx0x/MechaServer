@@ -1,6 +1,6 @@
 const EmergencyService = require("../model/EmergencyService");
 
-const getAllEmrService = async (req, res, next) => {
+exports.getAllEmrService = async (req, res, next) => {
   let allEmrServices;
   try {
     allEmrServices = await EmergencyService.find();
@@ -13,7 +13,7 @@ const getAllEmrService = async (req, res, next) => {
   return res.status(200).json({ allEmrServices });
 };
 
-const addEmrServices = async (req, res, next) => {
+exports.addEmrServices = async (req, res, next) => {
   const { tech_name, srv_area, cont_no, image, exp_area } = req.body;
   if (
     !tech_name &&
@@ -42,11 +42,43 @@ const addEmrServices = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-  if(!em_service){
-    return res.status(500).json({message : "unable to save the data"});
+  if (!em_service) {
+    return res.status(500).json({ message: "unable to save the data" });
   }
-  return res.status(201).json({message : "data saved sucessfully"})
+  return res.status(201).json({ message: "data saved sucessfully" });
+};
+exports.deleteOne = async (req, res, next) => {
+  let data;
+  try {
+    data = await EmergencyService.findById(req.params.id);
+    await data.remove();
+    res.send({ data: "deleted" });
+  } catch (error) {
+    return next(error);
+  }
 };
 
-exports.getAllEmrService = getAllEmrService;
-exports.addEmrServices = addEmrServices;
+exports.updateOne = async (req, res, next) => {
+  let data;
+  try {
+    data = await EmergencyService.findById(req.params.id);
+    Object.assign(data, req.body);
+    data.save();
+    res.send({ res: "patched" });
+  } catch (error) {
+    return next(error);
+  }
+};
+exports.findOneWp = async (req, res, next) => {
+  let data;
+  try {
+    data = await EmergencyService.findById(req.params.id);
+  } catch (error) {
+    return next(error);
+  }
+  if (!data) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+  return res.status(200).json({ data });
+};
+
