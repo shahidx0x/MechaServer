@@ -7,21 +7,26 @@ const PORT = process.env.PORT || 5000;
 const product_router = require("./routes/ProductServiceRoute");
 const fwp_router = require("./routes/FindWpServiceRoute");
 const emrs_router = require("./routes/EmrServiceRoute");
+const users_router = require("./routes/UsersRoute");
+const cusinfo_router = require("./routes/CusInfoRoute");
+const techinfo_router = require("./routes/TechInfoRoute");
+const wpinfo_router = require("./routes/WpInfoRoute");
 const app = express();
-require('dotenv').config({ path: require('find-config')('.env') })
+require("dotenv").config({ path: require("find-config")(".env") });
 
-//Midleware
 app.use(cors());
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
-// parse application/json
-app.use(bodyParser.json())
-
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 //Routes
 app.use("/api-v1", emrs_router);
 app.use("/api-v1", fwp_router);
 app.use("/api-v1", product_router);
+app.use("/api-v1", users_router);
+app.use("/api-v1", cusinfo_router);
+app.use("/api-v1", techinfo_router);
+app.use("/api-v1", wpinfo_router);
+
 
 //view
 app.get("/", (req,res) => {
