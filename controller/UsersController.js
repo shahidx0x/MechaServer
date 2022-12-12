@@ -48,7 +48,7 @@ exports.updateOne = async (req, res, next) => {
     return next(error);
   }
 };
-exports.findOneWp = async (req, res, next) => {
+exports.findOneUser = async (req, res, next) => {
   let data;
   try {
     data = await UsersServices.findById(req.params.id);

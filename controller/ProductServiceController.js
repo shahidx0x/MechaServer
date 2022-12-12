@@ -65,7 +65,7 @@ exports.updateOne = async (req, res, next) => {
     return next(error);
   }
 };
-exports.findOneWp = async (req, res, next) => {
+exports.findOneProduct = async (req, res, next) => {
   let data;
   try {
     data = await ProductService.findById(req.params.id);

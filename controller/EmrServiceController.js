@@ -69,7 +69,7 @@ exports.updateOne = async (req, res, next) => {
     return next(error);
   }
 };
-exports.findOneWp = async (req, res, next) => {
+exports.findOneEmrService = async (req, res, next) => {
   let data;
   try {
     data = await EmergencyService.findById(req.params.id);
